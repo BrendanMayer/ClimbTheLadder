@@ -47,7 +47,7 @@ public class ChatGPTManager : MonoBehaviour
     {
         UIManager.instance.ResetInputFieldText();
         UIManager.instance.ToggleInputField(false);
-        CameraController.instance.CameraAndCursorToggle(true);
+        
         ChatMessage newMessage = new ChatMessage();
         newMessage.Content = text;
         newMessage.Role = "user";

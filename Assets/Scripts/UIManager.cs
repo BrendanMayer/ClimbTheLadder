@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
 
         ToggleInputField(true);
         ResetInputFieldText();
-        CameraController.instance.CameraAndCursorToggle(false);
+        
     }
 
     public void ToggleInputField(bool toggle)
