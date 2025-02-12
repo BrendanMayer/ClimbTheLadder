@@ -24,6 +24,8 @@ public class PlayerGroundedState : PlayerState
         {
             stateMachine.ChangeState(player.jumpState);
         }
+
+        
         PerformRaycast();
     }
 
@@ -81,6 +83,7 @@ public class PlayerGroundedState : PlayerState
         if (currentInteractable != null && player.IsInteracting())
         {
             currentInteractable.Interact();
+            
             if (currentInteractable.IsGrabbableItem())
             {
 

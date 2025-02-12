@@ -12,6 +12,7 @@ public class PlayerIdleState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
+        player.LockMouse();
         player.CURRENT_STATE = Player.STATES.IDLE;
     }
 

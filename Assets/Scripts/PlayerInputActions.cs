@@ -184,6 +184,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Speech"",
+                    ""type"": ""Button"",
+                    ""id"": ""a8e7b348-4534-4bfb-a07a-a6721e9e7c8d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CloseChat"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc06cf43-7249-4b16-92cf-c88a67acb503"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -208,6 +226,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""57082926-7271-4085-81b3-7677afe398d5"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Speech"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e36c012f-7c84-4820-9a86-93f225e6426e"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CloseChat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -226,6 +266,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
         m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
         m_Interaction_Drop = m_Interaction.FindAction("Drop", throwIfNotFound: true);
+        m_Interaction_Speech = m_Interaction.FindAction("Speech", throwIfNotFound: true);
+        m_Interaction_CloseChat = m_Interaction.FindAction("CloseChat", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -397,12 +439,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<IInteractionActions> m_InteractionActionsCallbackInterfaces = new List<IInteractionActions>();
     private readonly InputAction m_Interaction_Interact;
     private readonly InputAction m_Interaction_Drop;
+    private readonly InputAction m_Interaction_Speech;
+    private readonly InputAction m_Interaction_CloseChat;
     public struct InteractionActions
     {
         private @PlayerInputActions m_Wrapper;
         public InteractionActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Interact => m_Wrapper.m_Interaction_Interact;
         public InputAction @Drop => m_Wrapper.m_Interaction_Drop;
+        public InputAction @Speech => m_Wrapper.m_Interaction_Speech;
+        public InputAction @CloseChat => m_Wrapper.m_Interaction_CloseChat;
         public InputActionMap Get() { return m_Wrapper.m_Interaction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -418,6 +464,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Drop.started += instance.OnDrop;
             @Drop.performed += instance.OnDrop;
             @Drop.canceled += instance.OnDrop;
+            @Speech.started += instance.OnSpeech;
+            @Speech.performed += instance.OnSpeech;
+            @Speech.canceled += instance.OnSpeech;
+            @CloseChat.started += instance.OnCloseChat;
+            @CloseChat.performed += instance.OnCloseChat;
+            @CloseChat.canceled += instance.OnCloseChat;
         }
 
         private void UnregisterCallbacks(IInteractionActions instance)
@@ -428,6 +480,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Drop.started -= instance.OnDrop;
             @Drop.performed -= instance.OnDrop;
             @Drop.canceled -= instance.OnDrop;
+            @Speech.started -= instance.OnSpeech;
+            @Speech.performed -= instance.OnSpeech;
+            @Speech.canceled -= instance.OnSpeech;
+            @CloseChat.started -= instance.OnCloseChat;
+            @CloseChat.performed -= instance.OnCloseChat;
+            @CloseChat.canceled -= instance.OnCloseChat;
         }
 
         public void RemoveCallbacks(IInteractionActions instance)
@@ -459,5 +517,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnInteract(InputAction.CallbackContext context);
         void OnDrop(InputAction.CallbackContext context);
+        void OnSpeech(InputAction.CallbackContext context);
+        void OnCloseChat(InputAction.CallbackContext context);
     }
 }

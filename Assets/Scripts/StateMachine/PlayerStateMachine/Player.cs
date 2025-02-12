@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -11,6 +12,8 @@ public class Player : MonoBehaviour
     public Rigidbody rb {  get; private set; }
     private PlayerInputActions inputActions;
     public Camera FPCam { get; private set; }
+    public Transform computerSitPosition;
+    public Transform computerCamPosition;
     #endregion
 
     [Header("Movement Info")]
@@ -22,6 +25,8 @@ public class Player : MonoBehaviour
     public float minAngle = -90f;
     public float maxAngle = 90f;
     public bool lockCamera = false;
+    public float cameraLerpSpeed = 5f;
+    public float threshold = 0.01f;
     [Space]
     public float bobFrequency = 5f;
     public float bobAmplitute = 0.1f;
@@ -35,6 +40,12 @@ public class Player : MonoBehaviour
     public float interactDistance = 10f;
     public LayerMask interactableLayers;
     public GameObject currentHeldItem;
+
+    [Header("NPC Interaction")]
+    
+    public ChatGPTManager currentTalkingToNPC;
+    public bool talkingToNPC = false;
+    public bool recording = false;
 
 
     #region States
@@ -53,6 +64,8 @@ public class Player : MonoBehaviour
     public PlayerMoveState moveState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAirState airState { get; private set; }
+    public PlayerComputerState computerState { get; private set; }
+    public PlayerInteractState interactState { get; private set; }
     #endregion
 
 
@@ -68,6 +81,8 @@ public class Player : MonoBehaviour
         moveState = new PlayerMoveState(this, stateMachine, "Move");
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
         airState = new PlayerAirState(this, stateMachine, "Jump");
+        computerState = new PlayerComputerState(this, stateMachine, "Computer");
+        interactState = new PlayerInteractState(this, stateMachine, "Talk");
     }
 
     private void Start()
@@ -81,9 +96,11 @@ public class Player : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.Update();
-
+        
         CameraRotation();
     }
+
+    
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
     {
@@ -125,27 +142,45 @@ public class Player : MonoBehaviour
         return inputActions.Interaction.Interact.WasPressedThisFrame();
     }
 
+    public bool CloseNPCChat()
+    {
+        return inputActions.Interaction.CloseChat.WasPressedThisFrame();
+    }
+
     public bool DropItem()
     {
         return inputActions.Interaction.Drop.WasPressedThisFrame();
+    }
+
+    public bool VoiceInput()
+    {
+            return inputActions.Interaction.Speech.WasPressedThisFrame();
+ 
+        
     }
     #endregion
 
     #region Camera Movement
     private float verticalRotation = 0;
-        private void CameraRotation()
+    
+
+    private void CameraRotation()
     {
-        Vector2 mouseDelta = GetMouseDelta();
-        float mouseX = mouseDelta.x * sensitivity * Time.deltaTime;
-        float mouseY = mouseDelta.y * sensitivity * Time.deltaTime;
+        if (!lockCamera)
+        {
+            Vector2 mouseDelta = GetMouseDelta();
+            float mouseX = mouseDelta.x * sensitivity * Time.deltaTime;
+            float mouseY = mouseDelta.y * sensitivity * Time.deltaTime;
 
-        // Rotate Player when looking left/right
-        transform.Rotate(Vector3.up, mouseX);
+            // Rotate Player when looking left/right
+            transform.Rotate(Vector3.up, mouseX);
 
-        verticalRotation -= mouseY; // invert
-        verticalRotation = Mathf.Clamp(verticalRotation, minAngle, maxAngle);
+            verticalRotation -= mouseY; // invert
+            verticalRotation = Mathf.Clamp(verticalRotation, minAngle, maxAngle);
 
-        FPCam.transform.localEulerAngles = new Vector3(verticalRotation, 0f, 0f);
+            FPCam.transform.localEulerAngles = new Vector3(verticalRotation, 0f, 0f);
+        }
+        
     }
 
     public void LockMouse()
@@ -157,9 +192,52 @@ public class Player : MonoBehaviour
 
     public void UnlockMouseLockCamera()
     {
+
         lockCamera = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        
+    }
+
+     public bool HasItem(string requiredItem)
+    {
+        if (currentHeldItem != null && currentHeldItem.gameObject.name.Contains(requiredItem))
+        {
+            Destroy(currentHeldItem.gameObject);
+            currentHeldItem = null;
+            if (currentTalkingToNPC != null)
+            {
+                currentTalkingToNPC.taskCompleted = true;
+            }
+            Debug.Log("Task Complete");
+            return true;
+            
+            
+        }
+        else
+        {
+            return false;
+            
+        }
+    }
+
+    public bool HasTurnedOn(string turnedOnItem)
+    {
+        if (currentTalkingToNPC != null)
+        {
+            GameObject go = GameObject.Find(turnedOnItem);
+            if (go.GetComponent<LightSwitch>().active)
+            {
+                currentTalkingToNPC.taskCompleted = true;
+                Debug.Log("Task Complete");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else return false;
     }
     #endregion
 

@@ -17,4 +17,9 @@ public class PersonalityTraits : ScriptableObject
     public string dislikes;
     [Tooltip("What Sort Of Emotions Should The Boss Replicate?")]
     public string emotions;
+
+    public List<Task> tasks;
+
+    public string favouriteCoWorker;
+    public string dislikedCoWorker;
 }
