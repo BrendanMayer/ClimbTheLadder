@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LightSwitch : MonoBehaviour, IInteractable
 {
-    public bool active; // Is the light switch active (lights on)
+    public bool active;
     [SerializeField] private List<Light> lights; // Lights controlled by this switch
     [SerializeField] private GameObject interactText; // UI text for interaction prompt
     private Animator animator;

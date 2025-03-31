@@ -15,10 +15,20 @@ public class NPCInteract : MonoBehaviour, IInteractable
     public void Interact()
     {
         player.talkingToNPC = true;
-        TaskManager.Instance.CheckForTaskCompletion();
-        player.currentTalkingToNPC = GetComponent<ChatGPTManager>();
+        
+        
+        NPC npc = GetComponent<NPC>();
+
+        player.currentTalkingToNPC = npc;
+        if (npc.currentTask.taskName != "")
+        {
+            TaskManager.Instance.CheckTaskCompletion(npc.currentTask, false);
+        }
+        
         player.stateMachine.ChangeState(player.interactState);
         player.GetComponent<Whisper>().currentTalkingToNPC = GetComponent<ChatGPTManager>();
+        
+        npc.stateMachine.ChangeState(npc.introState);
        
 
     }

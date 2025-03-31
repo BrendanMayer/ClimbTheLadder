@@ -56,7 +56,7 @@ namespace Samples.Whisper
         {
             
             UIManager.instance.ChangeTextColor(Color.black);
-            UIManager.instance.StartTyping("Say Something...");
+            
             isRecording = true;
            
 

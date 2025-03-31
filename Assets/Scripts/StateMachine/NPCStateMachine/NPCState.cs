@@ -22,7 +22,7 @@ public class NPCState : MonoBehaviour
 
     public virtual void Enter()
     {
-        
+        npc.animator.SetBool(animBoolName, true);
     }
 
     public virtual void Update()
@@ -32,7 +32,7 @@ public class NPCState : MonoBehaviour
 
     public virtual void Exit()
     {
-
+        npc.animator.SetBool(animBoolName, false);
     }
     
 }

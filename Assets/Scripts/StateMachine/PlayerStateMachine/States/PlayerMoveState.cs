@@ -56,6 +56,15 @@ public class PlayerMoveState : PlayerGroundedState
             float horizontalOffset = Mathf.Cos(player.bobbingTime) * player.bobHorizontalAmplitude;
 
             player.FPCam.transform.localPosition = player.cameraStartPosition + new Vector3(horizontalOffset, verticalOffset, 0f);
+            if (Mathf.Sin(player.bobbingTime ) < -0.98f && !player.hasPlayedStepSound)
+            {
+                AudioManager.Instance.PlaySoundRandonPitchMain(AudioManager.Instance.walking);
+                player.hasPlayedStepSound = true;
+            }
+            else if (Mathf.Sin(player.bobbingTime) > 0.9f)
+            {
+                player.hasPlayedStepSound = false; // Reset flag at the peak to allow next step sound
+            }
         }
         else
         {

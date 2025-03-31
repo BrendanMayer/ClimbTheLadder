@@ -38,13 +38,26 @@ public class PlayerState : MonoBehaviour
         xInput = movementDir.x;
         yInput = movementDir.y;
 
-        if (player.DropItem() && player.currentHeldItem != null)
+        if (player.DropItem() && Inventory.Instance.currentHeldItem != null)
         {
-            player.currentHeldItem.GetComponent<Grabbable>().Drop();
-            player.currentHeldItem.GetComponent<Grabbable>().EnableCollider();
-            player.currentHeldItem = null;
+            Inventory.Instance.DropItem();
         }
-        
+
+        if (player.InventorySlot1())
+        {
+            Inventory.Instance.TakeOutItem(0);
+        }
+
+        if (player.InventorySlot2())
+        {
+            Inventory.Instance.TakeOutItem(1);
+        }
+
+        if (player.InventorySlot3())
+        {
+            Inventory.Instance.TakeOutItem(2);
+        }
+
     }
 
     public virtual void Exit()

@@ -20,13 +20,16 @@ public class Player : MonoBehaviour
     public float moveSpeed;
     public float sensitivity;
     public float jumpHeight = 5f;
+    public bool hasPlayedStepSound = false;
 
     [Header("Camera Info")]
+    
     public float minAngle = -90f;
     public float maxAngle = 90f;
     public bool lockCamera = false;
     public float cameraLerpSpeed = 5f;
     public float threshold = 0.01f;
+    public GameObject playerCanvas;
     [Space]
     public float bobFrequency = 5f;
     public float bobAmplitute = 0.1f;
@@ -37,13 +40,17 @@ public class Player : MonoBehaviour
     public GameObject itemSlot;
 
     [Header("Interactables")]
-    public float interactDistance = 10f;
+    public float interactDistance = 2f;
     public LayerMask interactableLayers;
-    public GameObject currentHeldItem;
+    private IInteractable currentInteractable = null;
+    public bool isDragging = false;
+    public LayerMask draggable;
+    public HingeJoint currentDraggable;
+    private Vector3 lastMousePosition;
 
     [Header("NPC Interaction")]
     
-    public ChatGPTManager currentTalkingToNPC;
+    public NPC currentTalkingToNPC;
     public bool talkingToNPC = false;
     public bool recording = false;
 
@@ -91,6 +98,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         LockMouse();
         cameraStartPosition = FPCam.transform.localPosition;
+        
     }
 
     private void Update()
@@ -98,6 +106,7 @@ public class Player : MonoBehaviour
         stateMachine.currentState.Update();
         
         CameraRotation();
+        
     }
 
     
@@ -108,11 +117,7 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector3(moveDir.x, rb.velocity.y, moveDir.z);
     }
 
-    public void GetCurrentHeldObject()
-    {
-        currentHeldItem = itemSlot.GetComponentInChildren<Grabbable>().gameObject;
-        currentHeldItem.GetComponent<Grabbable>().DisableCollider();
-    }
+  
 
     #region InputHandling
     public Vector2 GetMovementDirNormalized()
@@ -158,6 +163,34 @@ public class Player : MonoBehaviour
  
         
     }
+
+    public bool InventorySlot1()
+    {
+        return inputActions.InventoryMap.Slot1.WasPressedThisFrame();
+
+    }
+
+    public bool InventorySlot2()
+    {
+        return inputActions.InventoryMap.Slot2.WasPressedThisFrame();
+
+    }
+
+    public bool InventorySlot3()
+    {
+        return inputActions.InventoryMap.Slot3.WasPressedThisFrame();
+
+    }
+
+    public bool PressAnyKey()
+    {
+        return inputActions.AnyButton.Any.WasPressedThisFrame();
+    }
+
+    public bool HoldClick()
+    {
+        return inputActions.Interaction.Click.IsPressed();
+    }
     #endregion
 
     #region Camera Movement
@@ -199,46 +232,117 @@ public class Player : MonoBehaviour
         
     }
 
-     public bool HasItem(string requiredItem)
+    private void TrySelectDoor(RaycastHit hit)
     {
-        if (currentHeldItem != null && currentHeldItem.gameObject.name.Contains(requiredItem))
-        {
-            Destroy(currentHeldItem.gameObject);
-            currentHeldItem = null;
-            if (currentTalkingToNPC != null)
+        
+            HingeJoint hinge = hit.collider.GetComponent<HingeJoint>();
+
+            if (hinge != null) // Ensure it's a door
             {
-                currentTalkingToNPC.taskCompleted = true;
+                
+                currentDraggable = hinge; // Store the selected door
+                currentDraggable.useMotor = true; // Ensure motor is enabled
+                isDragging = true;
+                lastMousePosition = Input.mousePosition; // Store mouse position for smooth dragging
             }
-            Debug.Log("Task Complete");
-            return true;
-            
-            
-        }
-        else
+           
+       
+    }
+
+    private void DragSelectedDoor()
+    {
+        Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // Use raw mouse movement
+        float force = mouseDelta.x * -20f; // Only use horizontal movement
+
+        if (currentDraggable != null)
         {
-            return false;
-            
+            JointMotor motor = currentDraggable.motor;
+            motor.targetVelocity = force * 20f; // Adjust speed
+            motor.force = 50f; // Ensure enough force is applied
+            currentDraggable.motor = motor;
         }
     }
 
-    public bool HasTurnedOn(string turnedOnItem)
+    public void PerformRaycast()
     {
-        if (currentTalkingToNPC != null)
+        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        Ray ray = FPCam.ScreenPointToRay(screenCenter);
+
+        string tooltipToShow = "NONE"; // Default tooltip
+
+        // Interactable Check
+        if (Physics.Raycast(ray, out RaycastHit hit, interactDistance, interactableLayers))
         {
-            GameObject go = GameObject.Find(turnedOnItem);
-            if (go.GetComponent<LightSwitch>().active)
+            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+
+            if (interactable != null)
             {
-                currentTalkingToNPC.taskCompleted = true;
-                Debug.Log("Task Complete");
-                return true;
-            }
-            else
-            {
-                return false;
+                if (currentInteractable != interactable)
+                {
+                    currentInteractable?.EnableOrDisableText(false); // Disable previous text
+                    currentInteractable = interactable;
+                    currentInteractable.EnableOrDisableText(true);
+                }
+
+                tooltipToShow = "INTERACT"; // Keep showing INTERACT while looking at it
             }
         }
-        else return false;
+        else
+        {
+            if (currentInteractable != null)
+            {
+                currentInteractable.EnableOrDisableText(false);
+                currentInteractable = null;
+            }
+        }
+
+        // Drag Check (only override NONE, not INTERACT)
+        Ray dragRay = FPCam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(dragRay, out RaycastHit dragHit, 2, draggable))
+        {
+            if (dragHit.collider != null && tooltipToShow == "NONE" && !HoldClick()) // Prevent overriding INTERACT
+            {
+                tooltipToShow = "DRAG";
+            }
+        }
+
+        // Apply Tooltip at the End (prevents overwriting)
+        
+
+        // Handle Dragging
+        if (Input.GetMouseButtonDown(0) && dragHit.collider != null)
+        {
+            
+            TrySelectDoor(dragHit);
+        }
+        UIManager.instance.ShowTooltip(tooltipToShow);
+        if (isDragging && currentDraggable != null)
+        {
+            DragSelectedDoor();
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+            if (currentDraggable != null)
+            {
+                JointMotor motor = currentDraggable.motor;
+                currentDraggable.motor = motor;
+                currentDraggable = null;
+            }
+        }
+
+        lastMousePosition = Input.mousePosition;
+
+        if (currentInteractable != null && IsInteracting())
+        {
+            currentInteractable.Interact();
+        }
     }
+
+
+
+
     #endregion
 
 }

@@ -202,6 +202,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""815ad8a9-77b1-4ffc-b184-d62817f55a46"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -230,7 +239,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""57082926-7271-4085-81b3-7677afe398d5"",
-                    ""path"": ""<Keyboard>/v"",
+                    ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -246,6 +255,146 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""CloseChat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ecc02fa-ef54-4f2d-a512-0f30de867e12"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""InventoryMap"",
+            ""id"": ""b45237b6-7e72-4e12-b809-56841837f044"",
+            ""actions"": [
+                {
+                    ""name"": ""Slot1"",
+                    ""type"": ""Button"",
+                    ""id"": ""06f7149d-987d-468a-a3a2-1878aafeb413"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot2"",
+                    ""type"": ""Button"",
+                    ""id"": ""55292555-e9f8-4625-86b7-ffcc2c23dd32"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slot3"",
+                    ""type"": ""Button"",
+                    ""id"": ""78aab775-57b3-4c32-9392-8842e9984272"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""4331bf8c-b406-4e9e-9bcb-040bf4033f54"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Slot1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb91c37e-96e3-4222-97f2-ea308d1103d6"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Slot2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d0ae715d-5e8a-43b8-91e8-43a569ebad79"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Slot3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""AnyButton"",
+            ""id"": ""9f71357d-8d06-40ff-bb56-eac9dbe93db6"",
+            ""actions"": [
+                {
+                    ""name"": ""Any"",
+                    ""type"": ""Button"",
+                    ""id"": ""c2c0cc6c-92f9-4865-afb5-ee9c29a3fa81"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""8b745db5-2afa-4aa7-9592-626f1f0c3ae7"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71a48d37-e9f0-4deb-a445-cb317b5cca27"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49f3f111-bdb8-4ec0-a0d2-e5e5645e59da"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0bd8542f-dfe1-4bfc-a0f6-aa165862143e"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -268,6 +417,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Interaction_Drop = m_Interaction.FindAction("Drop", throwIfNotFound: true);
         m_Interaction_Speech = m_Interaction.FindAction("Speech", throwIfNotFound: true);
         m_Interaction_CloseChat = m_Interaction.FindAction("CloseChat", throwIfNotFound: true);
+        m_Interaction_Click = m_Interaction.FindAction("Click", throwIfNotFound: true);
+        // InventoryMap
+        m_InventoryMap = asset.FindActionMap("InventoryMap", throwIfNotFound: true);
+        m_InventoryMap_Slot1 = m_InventoryMap.FindAction("Slot1", throwIfNotFound: true);
+        m_InventoryMap_Slot2 = m_InventoryMap.FindAction("Slot2", throwIfNotFound: true);
+        m_InventoryMap_Slot3 = m_InventoryMap.FindAction("Slot3", throwIfNotFound: true);
+        // AnyButton
+        m_AnyButton = asset.FindActionMap("AnyButton", throwIfNotFound: true);
+        m_AnyButton_Any = m_AnyButton.FindAction("Any", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -441,6 +599,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Interaction_Drop;
     private readonly InputAction m_Interaction_Speech;
     private readonly InputAction m_Interaction_CloseChat;
+    private readonly InputAction m_Interaction_Click;
     public struct InteractionActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -449,6 +608,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Drop => m_Wrapper.m_Interaction_Drop;
         public InputAction @Speech => m_Wrapper.m_Interaction_Speech;
         public InputAction @CloseChat => m_Wrapper.m_Interaction_CloseChat;
+        public InputAction @Click => m_Wrapper.m_Interaction_Click;
         public InputActionMap Get() { return m_Wrapper.m_Interaction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -470,6 +630,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CloseChat.started += instance.OnCloseChat;
             @CloseChat.performed += instance.OnCloseChat;
             @CloseChat.canceled += instance.OnCloseChat;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
         }
 
         private void UnregisterCallbacks(IInteractionActions instance)
@@ -486,6 +649,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CloseChat.started -= instance.OnCloseChat;
             @CloseChat.performed -= instance.OnCloseChat;
             @CloseChat.canceled -= instance.OnCloseChat;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
         }
 
         public void RemoveCallbacks(IInteractionActions instance)
@@ -503,6 +669,114 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public InteractionActions @Interaction => new InteractionActions(this);
+
+    // InventoryMap
+    private readonly InputActionMap m_InventoryMap;
+    private List<IInventoryMapActions> m_InventoryMapActionsCallbackInterfaces = new List<IInventoryMapActions>();
+    private readonly InputAction m_InventoryMap_Slot1;
+    private readonly InputAction m_InventoryMap_Slot2;
+    private readonly InputAction m_InventoryMap_Slot3;
+    public struct InventoryMapActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public InventoryMapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Slot1 => m_Wrapper.m_InventoryMap_Slot1;
+        public InputAction @Slot2 => m_Wrapper.m_InventoryMap_Slot2;
+        public InputAction @Slot3 => m_Wrapper.m_InventoryMap_Slot3;
+        public InputActionMap Get() { return m_Wrapper.m_InventoryMap; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InventoryMapActions set) { return set.Get(); }
+        public void AddCallbacks(IInventoryMapActions instance)
+        {
+            if (instance == null || m_Wrapper.m_InventoryMapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InventoryMapActionsCallbackInterfaces.Add(instance);
+            @Slot1.started += instance.OnSlot1;
+            @Slot1.performed += instance.OnSlot1;
+            @Slot1.canceled += instance.OnSlot1;
+            @Slot2.started += instance.OnSlot2;
+            @Slot2.performed += instance.OnSlot2;
+            @Slot2.canceled += instance.OnSlot2;
+            @Slot3.started += instance.OnSlot3;
+            @Slot3.performed += instance.OnSlot3;
+            @Slot3.canceled += instance.OnSlot3;
+        }
+
+        private void UnregisterCallbacks(IInventoryMapActions instance)
+        {
+            @Slot1.started -= instance.OnSlot1;
+            @Slot1.performed -= instance.OnSlot1;
+            @Slot1.canceled -= instance.OnSlot1;
+            @Slot2.started -= instance.OnSlot2;
+            @Slot2.performed -= instance.OnSlot2;
+            @Slot2.canceled -= instance.OnSlot2;
+            @Slot3.started -= instance.OnSlot3;
+            @Slot3.performed -= instance.OnSlot3;
+            @Slot3.canceled -= instance.OnSlot3;
+        }
+
+        public void RemoveCallbacks(IInventoryMapActions instance)
+        {
+            if (m_Wrapper.m_InventoryMapActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IInventoryMapActions instance)
+        {
+            foreach (var item in m_Wrapper.m_InventoryMapActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_InventoryMapActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public InventoryMapActions @InventoryMap => new InventoryMapActions(this);
+
+    // AnyButton
+    private readonly InputActionMap m_AnyButton;
+    private List<IAnyButtonActions> m_AnyButtonActionsCallbackInterfaces = new List<IAnyButtonActions>();
+    private readonly InputAction m_AnyButton_Any;
+    public struct AnyButtonActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public AnyButtonActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Any => m_Wrapper.m_AnyButton_Any;
+        public InputActionMap Get() { return m_Wrapper.m_AnyButton; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(AnyButtonActions set) { return set.Get(); }
+        public void AddCallbacks(IAnyButtonActions instance)
+        {
+            if (instance == null || m_Wrapper.m_AnyButtonActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_AnyButtonActionsCallbackInterfaces.Add(instance);
+            @Any.started += instance.OnAny;
+            @Any.performed += instance.OnAny;
+            @Any.canceled += instance.OnAny;
+        }
+
+        private void UnregisterCallbacks(IAnyButtonActions instance)
+        {
+            @Any.started -= instance.OnAny;
+            @Any.performed -= instance.OnAny;
+            @Any.canceled -= instance.OnAny;
+        }
+
+        public void RemoveCallbacks(IAnyButtonActions instance)
+        {
+            if (m_Wrapper.m_AnyButtonActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IAnyButtonActions instance)
+        {
+            foreach (var item in m_Wrapper.m_AnyButtonActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_AnyButtonActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public AnyButtonActions @AnyButton => new AnyButtonActions(this);
     public interface ILocomotionActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -519,5 +793,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnDrop(InputAction.CallbackContext context);
         void OnSpeech(InputAction.CallbackContext context);
         void OnCloseChat(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
+    }
+    public interface IInventoryMapActions
+    {
+        void OnSlot1(InputAction.CallbackContext context);
+        void OnSlot2(InputAction.CallbackContext context);
+        void OnSlot3(InputAction.CallbackContext context);
+    }
+    public interface IAnyButtonActions
+    {
+        void OnAny(InputAction.CallbackContext context);
     }
 }

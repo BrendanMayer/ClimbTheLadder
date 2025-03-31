@@ -15,8 +15,8 @@ public class PlayerInteractState : PlayerGroundedState
         base.Enter();
 
         UIManager.instance.ToggleChatWindow(true);
-        //UIManager.instance.InitiateDialogue();
-        player.currentTalkingToNPC.IntroMessgage();
+        UIManager.instance.SetNameText(player.currentTalkingToNPC.GetComponent<ChatGPTManager>().traits.name);
+
     }
 
     public override void Update()
@@ -25,9 +25,11 @@ public class PlayerInteractState : PlayerGroundedState
         if (player.CloseNPCChat())
         {
             player.talkingToNPC = false;
+            
             UIManager.instance.StopTypingAndClear();
             UIManager.instance.ToggleChatWindow(false);
-
+            player.currentTalkingToNPC.stateMachine.ChangeState(player.currentTalkingToNPC.idleState);
+            player.currentTalkingToNPC = null;
             stateMachine.ChangeState(player.idleState);
         }
 
@@ -37,13 +39,13 @@ public class PlayerInteractState : PlayerGroundedState
             if (!player.recording)
             {
                 player.recording = true;
-                Debug.Log("Recording!!!");
+                UIManager.instance.SetMicrophoneIndicator(true);
                 player.GetComponent<Whisper>().StartRecording();
             }
             else if (player.recording)
             {
                 player.recording = false;
-                Debug.Log("Stopped Recording!!!");
+                UIManager.instance.SetMicrophoneIndicator(false);
                 player.GetComponent<Whisper>().EndRecording();
             }
         }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - powerButton
   - Waypoint
+  - ActionWaypoint
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - UI
   - Grabbable
   - Interactable
-  - 
+  - Draggable
   - 
   - 
   - 

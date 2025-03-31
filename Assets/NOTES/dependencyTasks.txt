@@ -1,0 +1,16 @@
+- right now i have ID's and dependency IDS
+
+the code should:
+- Check if a task has a dependency ID not equal to 0
+- find the dependency Task with the same ID
+- assign it to a random NPC --
+- have a check to see if the dependency has been completed before the main task is able completed (bool?)--
+- only allow the random dependency task to be given by the npc is if has been mentioned through the main
+ task first (tell chatgpt to never talk about it unless specifically asked about it)
+- chatgpt should return a different tag for completed dependency tasks.
+- tasks should be cleared from the NPC after completion so it is not given twice, also include context
+which tells chatgpt to forget that task.
+- needs to be cleared from the possible tasks list to prevent same task given twice from a different NPC
+when random task assignation is made.
+
+ 

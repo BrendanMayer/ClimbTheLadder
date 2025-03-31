@@ -6,6 +6,13 @@ public class DoorController : MonoBehaviour, IInteractable
     [SerializeField] private float openAngle = 90f; // How far the door opens
     [SerializeField] private float openSpeed = 2f; // Speed of door opening
     [SerializeField] private GameObject textUI; // UI text to display interaction prompt
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip doorOpen;
+    [SerializeField] private AudioClip doorClose;
+    [SerializeField] private AudioClip doorUnlock;
+   
+    public bool isLocked;
+    public string requiredItem;
 
     private bool isOpening = false;
     private bool isDoorOpen = false;
@@ -50,19 +57,27 @@ public class DoorController : MonoBehaviour, IInteractable
             return;
         }
 
-        
+
         if (isDoorOpen)
         {
             CloseDoor();
         }
-        else
+        else if (!isLocked)
         {
             OpenDoor(Camera.main.transform.position);
+        }
+        else if (GameObject.Find("HandSlot").transform.Find(requiredItem))
+        {
+            AudioManager.Instance.PlaySoundOnSpecificSource(source, doorUnlock);
+            Destroy(GameObject.Find("HandSlot").transform.Find(requiredItem).gameObject);
+            isLocked = false;
+            
         }
     }
 
     private void OpenDoor(Vector3 playerPosition)
     {
+        AudioManager.Instance.PlaySoundOnSpecificSource(source, doorOpen);
         Vector3 directionToPlayer = playerPosition - doorHinge.position;
         Vector3 hingeForward = doorHinge.forward;
 
@@ -86,6 +101,7 @@ public class DoorController : MonoBehaviour, IInteractable
 
     private void CloseDoor()
     {
+        AudioManager.Instance.PlaySoundOnSpecificSource(source, doorOpen);
         targetRotation = initialRotation;
         isOpening = true;
         isDoorOpen = false;

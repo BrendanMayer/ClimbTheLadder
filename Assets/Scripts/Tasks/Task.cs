@@ -1,29 +1,67 @@
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
-public enum TaskType { Dialogue, ItemDelivery, TurnSomethingOn }
+public enum TaskStatus
+{
+    Pending,
+    InProgress,
+    Completed
+}
+
+public enum TaskType
+{
+    TurnSomethingOn,
+    GiveItem,
+    ReceiveItem
+}
 
 [System.Serializable]
 public class Task
 {
-    public string taskDescription;
+    public string taskName;
+    public string description;
+    public int xpReward;
+    public TaskStatus status;
     public TaskType taskType;
-    public string targetNPC;
+    public string[] dependencies; 
     public string requiredItem;
 
-    public bool IsTaskCompleted(Player player)
+
+
+
+    public Task(string taskName, string description, int xpReward, TaskType taskType, string[] dependencies, string requiredItem)
     {
-        switch (taskType)
+        this.taskName = taskName;
+        this.description = description;
+        this.xpReward = xpReward;
+        this.taskType = taskType;
+        this.status = TaskStatus.Pending;
+        this.dependencies = dependencies;
+        this.requiredItem = requiredItem;
+    }
+
+    public void CompleteTask(ref int xp)
+    {
+        if (status == TaskStatus.InProgress)
         {
-            case TaskType.Dialogue:
-               // return player.HasSpokenTo(targetNPC);
-            case TaskType.ItemDelivery:
-                UIManager.instance.CompleteTaskListItem(this, player.HasItem(requiredItem));
-                return player.HasItem(requiredItem);
-            case TaskType.TurnSomethingOn:
-                UIManager.instance.CompleteTaskListItem(this, player.HasTurnedOn(requiredItem));
-                return player.HasTurnedOn(requiredItem);
-            default:
-                return false;
+            status = TaskStatus.Completed;
+            xp += xpReward; // Add XP reward
         }
+    }
+
+    // Check if task is ready to be completed (based on dependencies)
+    public bool CanCompleteDependencies(List<string> completedTasks)
+    {
+        foreach (var dep in dependencies)
+        {
+            
+            if (!completedTasks.Contains(dep))
+            {
+                return false; 
+            }
+        }
+        return true; 
     }
 }

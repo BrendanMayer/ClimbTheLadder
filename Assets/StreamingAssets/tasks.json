@@ -1,0 +1,31 @@
+{
+    "tasks": [
+        {
+            "taskName": "Turn on the Generator",
+            "description": "Turn on the generator to restore power.",
+            "xpReward": 50,
+            "dependencies": [],
+            "taskType": "TurnSomethingOn",
+            "requiredItem": "",
+            "objectToTurnOn": "Generator"
+        },
+        {
+            "taskName": "Give Key",
+            "description": "Give the key to the NPC.",
+            "xpReward": 30,
+            "dependencies": [],
+            "taskType": "GiveItem",
+            "requiredItem": "Key",
+            "itemToGive": "Key"
+        },
+        {
+            "taskName": "Receive Scroll",
+            "description": "Receive the scroll from the NPC.",
+            "xpReward": 40,
+            "dependencies": [],
+            "taskType": "ReceiveItem",
+            "requiredItem": "Scroll",
+            "itemToReceive": "Scroll"
+        }
+    ]
+}

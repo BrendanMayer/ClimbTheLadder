@@ -13,6 +13,7 @@ public class PlayerComputerState : PlayerState
     {
         base.Enter();
         player.UnlockMouseLockCamera();
+        player.playerCanvas.SetActive(false);
        
     }
 
@@ -88,6 +89,7 @@ public class PlayerComputerState : PlayerState
 
     public override void Exit()
     {
+        player.playerCanvas.SetActive(true);
         base.Exit();
     }
 }

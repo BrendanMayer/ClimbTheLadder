@@ -12,13 +12,13 @@ public class TaskList : MonoBehaviour
     public void SetTask(Task taskList)
     {
         task = taskList;
-        GetComponent<TMP_Text>().text = task.taskDescription;
+        GetComponent<TMP_Text>().text = task.taskName;
     }
 
     public void SetTaskCompleted()
     {
 
-        GetComponent<TMP_Text>().text = "<s>" + task.taskDescription + "</s>";
+        GetComponent<TMP_Text>().text = "<s>" + task.taskName + "</s>";
 
 
     }

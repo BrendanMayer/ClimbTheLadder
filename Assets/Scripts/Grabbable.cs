@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Grabbable : MonoBehaviour, IInteractable
 {
-    [SerializeField] private Transform grabOffset; // Optional offset for correct orientation when grabbed
+    [SerializeField] private Transform grabOffset;
     private Rigidbody rb; // Reference to the object's Rigidbody
-    private bool isBeingHeld = false;
+    public bool isBeingHeld = false;
 
     private Transform originalParent; // Store original parent for releasing the object
     public Transform playerHandSlot; // Reference to the player's hand slot
@@ -13,6 +13,7 @@ public class Grabbable : MonoBehaviour, IInteractable
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        playerHandSlot = GameObject.Find("HandSlot").transform;
     }
 
     public void SetPlayerHandSlot(Transform handSlot)
@@ -28,62 +29,26 @@ public class Grabbable : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Debug.Log("Interacting");
-        if (isBeingHeld)
-        {
-            Drop();
-        }
-        else
+        
+        if (!isBeingHeld ) 
         {
             Grab();
         }
     }
 
-  
+    
 
     private void Grab()
     {
-        if (playerHandSlot == null)
+        if (!Inventory.Instance.IsFull())
         {
-            Debug.LogWarning("Player hand slot not assigned.");
-            return;
+            Inventory.Instance.AddItem(this.gameObject);
+            this.gameObject.SetActive(false);
         }
-
-        isBeingHeld = true;
-
-        // Store the original parent
-        originalParent = transform.parent;
-
-        // Disable gravity and make Rigidbody kinematic
-        rb.useGravity = false;
-        rb.isKinematic = true;
-
-        // Parent the object to the player's hand slot
-        transform.parent = playerHandSlot;
-
-        // Align position and rotation
-        transform.localPosition = Vector3.zero;
-        if (grabOffset != null)
-        {
-            transform.localRotation = grabOffset.localRotation;
-        }
-        else
-        {
-            transform.localRotation = Quaternion.identity;
-        }
+        
     }
 
-    public void Drop()
-    {
-        isBeingHeld = false;
-
-        // Restore parent and Rigidbody properties
-        transform.parent = originalParent;
-        rb.useGravity = true;
-        rb.isKinematic = false;
-
-        // Optionally add a small force or interaction logic here
-    }
+    
 
     public bool IsGrabbableItem()
     {

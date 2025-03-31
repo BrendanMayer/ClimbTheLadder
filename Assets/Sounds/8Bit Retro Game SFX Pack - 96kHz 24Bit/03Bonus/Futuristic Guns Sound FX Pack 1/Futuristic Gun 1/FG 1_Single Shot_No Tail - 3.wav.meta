@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 76b0e27611ae7e04aa12b58872132c8c
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 148495
+  packageName: 8-Bit Retro Game SFX Pack
+  packageVersion: 1.0
+  assetPath: Assets/8Bit Retro Game SFX Pack - 96kHz 24Bit/03Bonus/Futuristic Guns
+    Sound FX Pack 1/Futuristic Gun 1/FG 1_Single Shot_No Tail - 3.wav
+  uploadId: 316734
