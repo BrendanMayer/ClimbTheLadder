@@ -42,11 +42,17 @@ public class Player : MonoBehaviour
     [Header("Interactables")]
     public float interactDistance = 2f;
     public LayerMask interactableLayers;
+    public LayerMask grabbableLayers;
     private IInteractable currentInteractable = null;
     public bool isDragging = false;
     public LayerMask draggable;
     public HingeJoint currentDraggable;
     private Vector3 lastMousePosition;
+
+    public Collider playerCollider;
+    public Collider pcDeskCollider;
+    public Collider pcChairCollider;
+    public bool terminalOpen;
 
     [Header("NPC Interaction")]
     
@@ -62,7 +68,8 @@ public class Player : MonoBehaviour
         IDLE,
         MOVE,
         JUMP,
-        AIR
+        AIR,
+        COMPUTER,
     }
 
     public STATES CURRENT_STATE;
@@ -195,7 +202,7 @@ public class Player : MonoBehaviour
 
     #region Camera Movement
     private float verticalRotation = 0;
-    
+
 
     private void CameraRotation()
     {
@@ -284,7 +291,9 @@ public class Player : MonoBehaviour
                     currentInteractable.EnableOrDisableText(true);
                 }
 
-                tooltipToShow = "INTERACT"; // Keep showing INTERACT while looking at it
+                // Check if it's also grabbable
+                bool isGrabbable = ((grabbableLayers & (1 << hit.collider.gameObject.layer)) != 0);
+                tooltipToShow = isGrabbable ? "PICKUP" : "INTERACT";
             }
         }
         else
@@ -296,18 +305,18 @@ public class Player : MonoBehaviour
             }
         }
 
-        // Drag Check (only override NONE, not INTERACT)
+        // Draggable Check (only override tooltip if nothing else is active)
         Ray dragRay = FPCam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(dragRay, out RaycastHit dragHit, 2, draggable))
         {
-            if (dragHit.collider != null && tooltipToShow == "NONE" && !HoldClick()) // Prevent overriding INTERACT
+            if (dragHit.collider != null && tooltipToShow == "NONE" && !HoldClick())
             {
                 tooltipToShow = "DRAG";
             }
         }
 
-        // Apply Tooltip at the End (prevents overwriting)
-        
+
+
 
         // Handle Dragging
         if (Input.GetMouseButtonDown(0) && dragHit.collider != null)

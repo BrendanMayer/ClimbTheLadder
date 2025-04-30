@@ -19,11 +19,13 @@ public class NPCPrinterState : NPCActiveState
     public override void Update()
     {
         base.Update();
-        if (!npc.actionFlag )
+        if (!npc.actionFlag)
         {
             npc.PickRandomWaypoint();
             stateMachine.ChangeState(npc.moveState);
         }
+
+        // fill up a progress bar over time with a 1 in 10 say chance to move on to do something else. when progress bar is full, reset start again and add 20 points to final score.
     }
 
     public override void Exit()

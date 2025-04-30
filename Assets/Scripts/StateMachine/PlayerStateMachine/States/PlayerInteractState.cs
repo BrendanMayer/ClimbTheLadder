@@ -13,9 +13,10 @@ public class PlayerInteractState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
-
+        ChatGPTManager manager = player.currentTalkingToNPC.GetComponent<ChatGPTManager>();
         UIManager.instance.ToggleChatWindow(true);
-        UIManager.instance.SetNameText(player.currentTalkingToNPC.GetComponent<ChatGPTManager>().traits.name);
+        UIManager.instance.SetNameText(manager.traits.name);
+        UIManager.instance.SetTraits(manager.traits.interests, manager.traits.dislikes, manager.traits.emotions);
 
     }
 

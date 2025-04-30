@@ -149,6 +149,7 @@ public class TaskManager : MonoBehaviour
         if (skipCheck)
         {
             completed = true;
+            
             task.status = TaskStatus.Completed;
         }
 
@@ -189,8 +190,10 @@ public class TaskManager : MonoBehaviour
 
         if (completed) 
         {
+            UIManager.instance.CompleteTaskListItem();
             task.CompleteTask(ref totalScore);
-            completedTasks.Add(task);
+            Task completedTask = task;
+            completedTasks.Add(completedTask);
         }
     }
 
@@ -212,6 +215,8 @@ public class TaskManager : MonoBehaviour
         //return completedTasks.Sum(task => task.points);
         return totalScore;
     }
+
+    
 
     public GameObject ReturnItemToGive(string name)
     {

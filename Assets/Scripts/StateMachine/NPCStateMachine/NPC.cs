@@ -1,11 +1,9 @@
+
+
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using static UnityEngine.Rendering.DebugUI.Table;
+using UnityEngine.UI;
 
 public class NPC : MonoBehaviour
 {
@@ -24,9 +22,11 @@ public class NPC : MonoBehaviour
 
     public Task currentTask = null;
     public Task dependencyTask;
-    public Task dependencyGivenTask;
+    
 
     bool hasGivenPlayerTask;
+
+    public bool hasTaskBeenCompletedAtLeastOnce;
    
     public bool hasBeenSpokenTo = false;
     public bool currentlyTalking = false;
@@ -36,6 +36,10 @@ public class NPC : MonoBehaviour
 
     public Transform itemSpawner;
     public GameObject taskIcon;
+    public Slider progressBar;
+    public float fillDuration = 5f; // Fill time in seconds
+    public CoworkerPCData currentPC;
+    public bool isRunning;
     #region States
 
 
@@ -47,6 +51,7 @@ public class NPC : MonoBehaviour
         TALKING,
         INTRO,
         PRINTER,
+        COMPUTER,
     }
 
     public STATES CURRENT_STATE;
@@ -56,6 +61,7 @@ public class NPC : MonoBehaviour
     public NPCDialogueIntroState introState { get; private set; }
     public NPCDialogueState dialogueState { get; private set; }
     public NPCPrinterState printerState {  get; private set; }
+    public NPCComputerState computerState { get; private set; }
     public float rotationSpeed = 1f;
 
     #endregion
@@ -71,6 +77,7 @@ public class NPC : MonoBehaviour
         introState = new NPCDialogueIntroState(this, stateMachine, "Intro");
         dialogueState = new NPCDialogueState(this, stateMachine, "Dialogue");
         printerState = new NPCPrinterState(this, stateMachine, "Printer");
+        computerState = new NPCComputerState(this, stateMachine, "Computer");
 
     }
 
@@ -93,7 +100,42 @@ public class NPC : MonoBehaviour
     void Update()
     {
         stateMachine.currentState.Update();
-        taskIcon.SetActive(currentTask.taskName != "");
+        taskIcon.SetActive(currentTask.taskName != "" && currentTask.status != TaskStatus.Completed);
+    }
+
+    public void StartProgressBar()
+    {
+        StartCoroutine(FillProgress());
+    }
+
+    IEnumerator FillProgress()
+    {
+        while (isRunning)
+        {
+            float timer = 0f;
+            progressBar.value = 0f;
+
+            while (timer < fillDuration)
+            {
+                timer += Time.deltaTime;
+                progressBar.value = Mathf.Clamp01(timer / fillDuration);
+                yield return null;
+            }
+
+            // Full bar reached
+
+            GameManager.Instance.productivityScore += 5;
+
+            // 1 in 10 chance to stop
+            if (Random.Range(1, 11) == 1) // Random 1–10
+            {
+
+                isRunning = false;
+                actionFlag = false;
+                yield break;
+            }
+        }
+
     }
 
     public bool PickRandomWaypoint()
@@ -145,6 +187,9 @@ public class NPC : MonoBehaviour
             {
                 case ActionType.ActionTypes.Printer:
                     stateMachine.ChangeState(printerState);
+                    break;
+                case ActionType.ActionTypes.Computer:
+                    stateMachine.ChangeState(computerState);
                     break;
                 case ActionType.ActionTypes.None:
                     stateMachine.ChangeState(idleState);
@@ -206,17 +251,29 @@ public class NPC : MonoBehaviour
 
         return entryMessage;
 
-        // need task generation intervals, this function should send to chatgpt when that happens using askchatgptnoreturnmessage method
+        
     }
 
     public void IntroMessgage()
     {
         // move to intro state
         string text = "";
-        if (!hasBeenSpokenTo)
+        if (currentPC != null && currentPC.hasError)
+        {
+            text = "Your PC ran into a problem! tell the player to have a look if there is a virus or a network area through their computer terminal!";
+        }
+        else if (!hasBeenSpokenTo && GameManager.Instance.powerOn)
         {
             text = TaskMessage();
             hasBeenSpokenTo = true;
+        }
+        else if (!GameManager.Instance.powerOn)
+        {
+            text = "The lights are off, tell the player that the breaker is downstairs and they need to turn it back on so you can get back to work! You wont offer any other dialogue except asking to turn the lights back on";
+        }
+        else if (hasGivenPlayerTask && currentTask.status == TaskStatus.Completed && hasTaskBeenCompletedAtLeastOnce)
+        {
+            text = "If the player asks for help to complete a task, you only help others if there's something in it for you.\r\nThe player has previously completed a task for you, so you're now open to the idea of helping them—but not without being convinced.\r\nWhen the player asks you to do something, your first reaction should be: \"What's in it for me?\"\r\nRespond based on your specific likes and dislikes (as previously defined).\r\nIf the player's persuasion appeals to your preferences, you agree and respond helpfully, ending your message with --doTask to signal task acceptance.\r\nIf not, politely refuse or ask for more convincing.";
         }
         else if (hasGivenPlayerTask && currentTask.status != TaskStatus.Completed)
         {
@@ -225,7 +282,9 @@ public class NPC : MonoBehaviour
         else if (hasGivenPlayerTask && currentTask.status == TaskStatus.Completed)
         {
             text = "I have completed your task!";
+
         }
+        
         else
         {
             text = "I started speaking to you again, Say something!";
@@ -248,7 +307,17 @@ public class NPC : MonoBehaviour
     {
         GameObject item = TaskManager.Instance.ReturnItemToGive(currentTask.requiredItem);
         TaskManager.Instance.CheckTaskCompletion(currentTask, true);
-        Instantiate(item, itemSpawner);
+        if (Inventory.Instance.IsFull())
+        {
+            // if full spit it out else add to inventory
+            Instantiate(item, itemSpawner);
+        }
+        else
+        {
+            Inventory.Instance.AddItem(item);
+        }
+        
+        
 
     }
 }

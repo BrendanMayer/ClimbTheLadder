@@ -50,6 +50,7 @@ namespace Samples.Whisper
         private void ChangeMicrophone(int index)
         {
             PlayerPrefs.SetInt("user-mic-device-index", index);
+            dropdownLabel.text = dropdown.options[dropdown.value].text;
         }
         
         public void StartRecording()

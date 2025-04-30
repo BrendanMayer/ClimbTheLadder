@@ -8,6 +8,7 @@ public class ActionType : MonoBehaviour
     {
         None,
         Printer,
+        Computer,
     }
 
     public ActionTypes type;

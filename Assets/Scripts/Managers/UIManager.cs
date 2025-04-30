@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite microphoneOn;
     [SerializeField] private Sprite microphoneOff;
     [SerializeField] private Image keybindBackground;
+    [SerializeField] private TMP_Text likesText;
+    [SerializeField] private TMP_Text dislikesText;
+    [SerializeField] private TMP_Text emotionsText;
  
 
     public Image microphoneImage;
@@ -30,6 +33,7 @@ public class UIManager : MonoBehaviour
     private bool showText;
     [SerializeField] private GameObject interactTooltip;
     [SerializeField] private GameObject dragTooltip;
+    [SerializeField] private GameObject pickupTooltip;
 
 
     [Header("Inventory")]
@@ -40,6 +44,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image slotTwoBackground;
     [SerializeField] private Image slotThreeBackground;
     [SerializeField] private Color unselectedSlot;
+    [SerializeField] private GameObject InventoryUI;
     #region Components
 
     [SerializeField] private TMP_Text replyText;
@@ -114,6 +119,18 @@ public class UIManager : MonoBehaviour
         talkingWindow.SetActive(toggle);
     }
 
+    public void ToggleInventory(bool toggle)
+    {
+        InventoryUI.SetActive(toggle);
+    }
+
+    public void SetTraits(string interests, string dislikes, string emotions)
+    {
+        likesText.text = "<color=green>Likes:</color> " + interests;
+        dislikesText.text = "<color=red>Dislikes:</color> " + dislikes;
+        emotionsText.text = "Traits: " + emotions;
+    }
+
     public void InitiateDialogue()
     {
         int roll = Random.Range(0, openingLines.Count);
@@ -133,11 +150,11 @@ public class UIManager : MonoBehaviour
         taskListitems.Add(taskList);
     }
 
-    public void CompleteTaskListItem(Task task, bool isCompleted)
+    public void CompleteTaskListItem()
     {
         foreach (GameObject item in taskListitems)
         {
-            if (item.GetComponent<TaskList>() != null && item.GetComponent<TaskList>().task == task && isCompleted)
+            if (item.GetComponent<TaskList>() != null && item.GetComponent<TaskList>().task.status == TaskStatus.Completed)
             {
                 item.GetComponent<TaskList>().SetTaskCompleted();
             }
@@ -256,7 +273,10 @@ public class UIManager : MonoBehaviour
 
         interactTooltip.SetActive(tooltip == "INTERACT");
         dragTooltip.SetActive(tooltip == "DRAG");
+        pickupTooltip.SetActive(tooltip == "PICKUP");
 
-        showText = (tooltip == "INTERACT" || tooltip == "DRAG");
+        showText = (tooltip == "INTERACT" || tooltip == "DRAG" || tooltip == "PICKUP");
     }
+
+    
 }

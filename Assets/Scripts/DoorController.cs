@@ -42,10 +42,7 @@ public class DoorController : MonoBehaviour, IInteractable
 
     public void EnableOrDisableText(bool enable)
     {
-        if (textUI != null)
-        {
-            textUI.SetActive(enable);
-        }
+        
     }
 
     public void Interact()

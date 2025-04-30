@@ -22,8 +22,10 @@ public class NPCDialogueState : NPCActiveState
 
     public override void Exit()
     {
-        base.Exit();
+        UIManager.instance.ToggleInventory(true);
         npc.currentlyTalking = false;
+        base.Exit();
+        
     }
 }
 

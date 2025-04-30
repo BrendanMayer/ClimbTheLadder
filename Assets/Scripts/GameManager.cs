@@ -5,10 +5,12 @@ using TMPro;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     public TMP_Text timeText;
     public TMP_Text totalTitleText;
     public TMP_Text totalScoreText;
@@ -26,19 +28,39 @@ public class GameManager : MonoBehaviour
     private float fadeDuration = 1.5f;
 
     private int scoreToPromotion = 1500;
+    private int savedScore;
+    public int productivityScore;
 
     private bool canClick = false;
     private Player player;
+
+    private string savePath;
+
+    public bool powerOn;
+    public bool powerHasGoneOff = false;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        savePath = Path.Combine(Application.persistentDataPath, "score.json");
+    }
+
+
     void Start()
     {
         player = GameObject.Find("Player").GetComponent<Player>();
         originalTextPosition = timeText.rectTransform.anchoredPosition;
         centerPosition = Vector3.zero;
 
+        savedScore = LoadScore();
+
         totalTitleText.gameObject.SetActive(false);
         totalScoreText.gameObject.SetActive(false);
         clickText.gameObject.SetActive(false);
-        progressSlider.value = 0;
+        progressSlider.value = savedScore;
 
         UpdateTimeText();
         StartCoroutine(TimerCoroutine());
@@ -61,6 +83,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(FlipTextEffect());
         }
         player.enabled = false;
+
         yield return StartCoroutine(FadeToBlack());
         yield return StartCoroutine(MoveAndEnlargeText());
 
@@ -338,6 +361,8 @@ public class GameManager : MonoBehaviour
         }
 
         progressSlider.value = targetValue;
+
+        SaveScore((int)targetValue);
     }
 
     public void OnClick()
@@ -352,4 +377,34 @@ public class GameManager : MonoBehaviour
         
         
     }
+
+    public void SaveScore(int score)
+    {
+        ScoreData data = new ScoreData { score = score };
+        string json = JsonUtility.ToJson(data, true); // true = pretty print
+        File.WriteAllText(savePath, json);
+        Debug.Log($"Score saved to: {savePath}");
+    }
+
+    public int LoadScore()
+    {
+        if (File.Exists(savePath))
+        {
+            string json = File.ReadAllText(savePath);
+            ScoreData data = JsonUtility.FromJson<ScoreData>(json);
+            Debug.Log($"Score loaded: {data.score}");
+            return data.score;
+        }
+        else
+        {
+            Debug.LogWarning("No score file found. Returning 0.");
+            return 0;
+        }
+    }
+}
+
+[System.Serializable]
+public class ScoreData
+{
+    public int score;
 }

@@ -14,7 +14,7 @@ public class NPCDialogueIntroState : NPCActiveState
         base.Enter();
         npc.CURRENT_STATE = NPC.STATES.INTRO;
         npc.currentlyTalking = true;
-
+        //UIManager.instance.ToggleInventory(false);
         
 
         
@@ -35,7 +35,8 @@ public class NPCDialogueIntroState : NPCActiveState
         if (npc.currentTask.status == TaskStatus.Completed)
         {
             TaskManager.Instance.RemoveAssignedTask(npc.currentTask);
-            npc.currentTask = null;
+            
+            
         }
 
         base.Exit();

@@ -14,11 +14,13 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] speakingSounds;
     
     public AudioClip buttonPress;
+    public AudioClip clickComputerButton;
     public AudioClip counterUp;
     public AudioClip timerSound;
     public AudioClip smash;
     public AudioClip walking;
     public AudioClip pickup;
+    public AudioClip[] typingSounds;
 
     #endregion
 
@@ -57,5 +59,11 @@ public class AudioManager : MonoBehaviour
         mainCameraSource.pitch = index;
         mainCameraSource.PlayOneShot(clip);
         mainCameraSource.pitch = 1;
+    }
+
+    public void PlayRandomTypingSoundOnMainSource()
+    {
+        int index = Random.Range(0, typingSounds.Length);
+        mainCameraSource.PlayOneShot(typingSounds[index]);
     }
 }
